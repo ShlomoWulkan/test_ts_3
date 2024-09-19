@@ -26,6 +26,37 @@
         <div class="title">
             <h2>NBA Player Search</h2>            
         </div>
+        <div class="search-container">
+            <div class="search-box">
+                <form class="form" action="">
+                    <select name="position" class="select">
+                        <option value="" selected disabled>Select Position</option>
+                        <option value="PG">PG</option>
+                        <option value="SG">SG</option>
+                        <option value="SF">SF</option>
+                        <option value="PF">PF</option>
+                        <option value="C">C</option>
+                    </select>
+                    <div class="show points"></div>
+                    <input type="range" id="points" name="points" value="0" min="0" max="20000">
+                    <div class="show FG"></div>
+                    <input type="range" id="FG" name="fg" value="0" min="0" max="100">
+                    <div class="show 3P"></div>
+                    <input type="range" id="3P" name="threeP" value="0" min="0" max="100">
+                    <input class="submit" type="submit" value="search">
+                </form>
+                <table class="table">
+                    <tr class="tableHeader">
+                        <th>Player</th>
+                        <th>Position</th>
+                        <th>Points</th>
+                        <th>FG%</th>
+                        <th>3P%</th>
+                        <th>Action</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -55,3 +55,45 @@ body {
     padding: 10px;
 }
 
+.search-container {
+    width: 100%;
+    height: 60%;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+
+.search-box {
+    width: 70%;
+    height: 100%;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+form {
+    width: 100%;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+select, input {
+    width: 80%;
+    height: 20%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.submit {
+    width: 30%;
+    height: 30%;
+    border-radius: 5px;
+    background-color: #2e1bdf;
+    color: #fff;
+    cursor: pointer;
+}
