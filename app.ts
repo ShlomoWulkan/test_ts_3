@@ -4,6 +4,12 @@ let points: number = 0;
 let fg: number = 0;
 let threeP: number = 0;
 
+// variables that holdes a list of the current team
+let corentTeam: Player[] = [];
+
+// variables to hold the save button
+const saveBtn: HTMLButtonElement = document.querySelector(".saveBtn") as HTMLButtonElement;
+
 // variables to store html elements of the players of each position
 const PG: HTMLDivElement = document.querySelector('#PG') as HTMLDivElement;
 const SG: HTMLDivElement = document.querySelector('#SG') as HTMLDivElement;
@@ -109,6 +115,8 @@ const showPlayers = (players: Player[]) => {
         const addToTeamBtn: HTMLButtonElement = row.querySelector(".addToTeamBtn") as HTMLButtonElement;
         addToTeamBtn.addEventListener("click", () => {
             addToTeam(player);
+            console.log(corentTeam);
+            
         });
         table.appendChild(row);
 
@@ -132,22 +140,27 @@ const addToTeam = (player: Player) => {
         case "PG":
             PG.innerHTML = "<h4>Point Guard</h4>";
             insertToBox(PG, player); 
+            corentTeam[0] = player;
             break;
         case "SG":
             SG.innerHTML = "<h4>Shooting Guard</h4>";
             insertToBox(SG, player);
+            corentTeam[1] = player;
             break;
         case "SF":
             SF.innerHTML = "<h4>Small Forward</h4>";
             insertToBox(SF, player);
+            corentTeam[2] = player;
             break;
         case "PF":
             PF.innerHTML = "<h4>Power Forward</h4>";
             insertToBox(PF, player);
+            corentTeam[3] = player;
             break;
         case "C":
             C.innerHTML = "<h4>Center</h4>";
             insertToBox(C, player);
+            corentTeam[4] = player;
             break;
     }
 };
@@ -168,3 +181,34 @@ const insertToBox = (plaierBox: HTMLDivElement, player: Player) => {
     plaierBox.appendChild(playerFG);
     plaierBox.appendChild(playerPoints);
 };
+
+// התחלתי לעשות את הבונוס סיימתי את הפונקציה של ההוספה אבל כנראה אני 
+// לא שולח את זה מדוייק אז אני מקבל שגיאה ולא נשאר לי זמן לדבג את זה 
+saveBtn.addEventListener("click", async (): Promise<void> => {
+    if (corentTeam.length < 5) {
+        alert("Please add all players to the team");
+        return;
+    }
+
+    try {
+        const response = await fetch("https://nbaserver-q21u.onrender.com/api/AddTeam", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ corentTeam }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        
+    } catch (error) {
+        console.error("Error adding team:", error);
+        throw error;
+    }
+});
+

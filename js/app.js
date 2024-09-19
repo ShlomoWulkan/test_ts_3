@@ -13,6 +13,10 @@ let position = "";
 let points = 0;
 let fg = 0;
 let threeP = 0;
+// variables that holdes a list of the current team
+let corentTeam = [];
+// variables to hold the save button
+const saveBtn = document.querySelector(".saveBtn");
 // variables to store html elements of the players of each position
 const PG = document.querySelector('#PG');
 const SG = document.querySelector('#SG');
@@ -98,6 +102,7 @@ const showPlayers = (players) => {
         const addToTeamBtn = row.querySelector(".addToTeamBtn");
         addToTeamBtn.addEventListener("click", () => {
             addToTeam(player);
+            console.log(corentTeam);
         });
         table.appendChild(row);
     });
@@ -117,22 +122,27 @@ const addToTeam = (player) => {
         case "PG":
             PG.innerHTML = "<h4>Point Guard</h4>";
             insertToBox(PG, player);
+            corentTeam[0] = player;
             break;
         case "SG":
             SG.innerHTML = "<h4>Shooting Guard</h4>";
             insertToBox(SG, player);
+            corentTeam[1] = player;
             break;
         case "SF":
             SF.innerHTML = "<h4>Small Forward</h4>";
             insertToBox(SF, player);
+            corentTeam[2] = player;
             break;
         case "PF":
             PF.innerHTML = "<h4>Power Forward</h4>";
             insertToBox(PF, player);
+            corentTeam[3] = player;
             break;
         case "C":
             C.innerHTML = "<h4>Center</h4>";
             insertToBox(C, player);
+            corentTeam[4] = player;
             break;
     }
 };
@@ -152,3 +162,29 @@ const insertToBox = (plaierBox, player) => {
     plaierBox.appendChild(playerFG);
     plaierBox.appendChild(playerPoints);
 };
+// התחלתי לעשות את הבונוס סיימתי את הפונקציה של ההוספה אבל כנראה אני 
+// לא שולח את זה מדוייק אז אני מקבל שגיאה ולא נשאר לי זמן לדבג את זה 
+saveBtn.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
+    if (corentTeam.length < 5) {
+        alert("Please add all players to the team");
+        return;
+    }
+    try {
+        const response = yield fetch("https://nbaserver-q21u.onrender.com/api/AddTeam", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ corentTeam }),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = yield response.json();
+        console.log(data);
+    }
+    catch (error) {
+        console.error("Error adding team:", error);
+        throw error;
+    }
+}));
