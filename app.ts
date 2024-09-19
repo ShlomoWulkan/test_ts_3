@@ -3,6 +3,16 @@ let points: number = 0;
 let fg: number = 0;
 let threeP: number = 0;
 
+const PG: HTMLDivElement = document.querySelector('#PG') as HTMLDivElement;
+const SG: HTMLDivElement = document.querySelector('#SG') as HTMLDivElement;
+const SF: HTMLDivElement = document.querySelector('#SF') as HTMLDivElement;
+const PF: HTMLDivElement = document.querySelector('#PF') as HTMLDivElement;
+const C: HTMLDivElement = document.querySelector('#C') as HTMLDivElement;
+
+const pointsDiv: HTMLDivElement = document.querySelector('.points') as HTMLDivElement;
+const fgDiv: HTMLDivElement = document.querySelector('.FG') as HTMLDivElement;
+const threePDiv: HTMLDivElement = document.querySelector('.threeP') as HTMLDivElement;
+
 const form: HTMLFormElement = document.querySelector(".form") as HTMLFormElement;
 
 form.addEventListener("change", (event: Event) => {
@@ -14,22 +24,24 @@ form.addEventListener("change", (event: Event) => {
             break;
         case "points":
             points = Number(target.value); 
+            pointsDiv.textContent = points.toString();
             break;
         case "fg":
             fg = Number(target.value); 
+            fgDiv.textContent = fg.toString();
             break;
         case "threeP":
             threeP = Number(target.value); 
+            threePDiv.textContent = threeP.toString();
     }
-    console.log(`position ${position} points ${points} fg ${fg} three ${threeP}`);
 });
 
 type Player = {
-    name: string;
+    playerName: string;
     position: string;
     points: number;
-    fg: number;
-    threeP: number;
+    twoPercent: number;
+    threePercent: number;
 }
 
 const getPlayers = async (position: string, points: number, fg: number, threeP: number): Promise<Player[]> => {
@@ -52,7 +64,12 @@ const getPlayers = async (position: string, points: number, fg: number, threeP: 
         }
 
         const players: Player[] = await response.json();
-        return players;
+
+        const filteredPlayers = players.filter(player => 
+            (player as any).season?.some((season: number) => [2022, 2023, 2024].includes(season))
+        );
+
+        return filteredPlayers;
     } catch (error) {
         console.log(error);
         throw error;
@@ -62,18 +79,32 @@ const getPlayers = async (position: string, points: number, fg: number, threeP: 
 
 const showPlayers = (players: Player[]) => {
     const table: HTMLTableElement = document.querySelector(".table") as HTMLTableElement;
-    table.innerHTML = "";
+    table.innerHTML = `
+        <tr class="tableHeader">
+        <th>Player</th>
+        <th>Position</th>
+        <th>Points</th>
+        <th>FG%</th>
+        <th>3P%</th>
+        <th>Action</th>
+        </tr>
+    `;
     players.forEach((player) => {
         const row: HTMLTableRowElement = document.createElement("tr");
         row.innerHTML = `
-            <td>${player.name}</td>
+            <td>${player.playerName}</td>
             <td>${player.position}</td>
             <td>${player.points}</td>
-            <td>${player.fg}</td>
-            <td>${player.threeP}</td>
-            <td><button class="delete">Delete</button></td>
+            <td>${player.twoPercent}</td>
+            <td>${player.threePercent}</td>
+            <td class="addToTeam"><button class="addToTeamBtn">Add ${player.playerName} to current Team</button></td>
         `;
+        const addToTeamBtn: HTMLButtonElement = row.querySelector(".addToTeamBtn") as HTMLButtonElement;
+        addToTeamBtn.addEventListener("click", () => {
+            addToTeam(player);
+        });
         table.appendChild(row);
+
     });
 };
 
@@ -88,3 +119,44 @@ form.addEventListener("submit", async (event: Event) => {
     console.log(await getPlayers(position, points, fg, threeP));
 });
 
+const addToTeam = (player: Player) => {
+
+    switch (player.position) {
+        case "PG":
+            PG.innerHTML = "<h4>Point Guard</h4>";
+            insertToBox(PG, player); 
+            break;
+        case "SG":
+            SG.innerHTML = "<h4>Shooting Guard</h4>";
+            insertToBox(SG, player);
+            break;
+        case "SF":
+            SF.innerHTML = "<h4>Small Forward</h4>";
+            insertToBox(SF, player);
+            break;
+        case "PF":
+            PF.innerHTML = "<h4>Power Forward</h4>";
+            insertToBox(PF, player);
+            break;
+        case "C":
+            C.innerHTML = "<h4>Center</h4>";
+            insertToBox(C, player);
+            break;
+    }
+};
+
+const insertToBox = (plaierBox: HTMLDivElement, player: Player) => {
+    const playerName = document.createElement("p");
+    const playerPoints = document.createElement("p");
+    const playerFG = document.createElement("p");
+    const player3P = document.createElement("p");
+    playerName.textContent = player.playerName;
+    playerPoints.textContent = `Points: ${player.points}`;
+    playerFG.textContent = `Two Precents: ${player.twoPercent}%`;
+    player3P.textContent = `Three Precents: ${player.threePercent}%`;
+    plaierBox.appendChild(playerName);
+    plaierBox.appendChild(player3P);
+    plaierBox.appendChild(playerFG);
+    plaierBox.appendChild(playerPoints);
+
+};

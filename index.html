@@ -17,11 +17,11 @@
             <h2>My Fantasy Team</h2>
         </div>
         <div class="container">
-            <div class="box" id="PG"></div>
-            <div class="box" id="SG"></div>
-            <div class="box" id="SF"></div>
-            <div class="box" id="PF"></div>
-            <div class="box" id="C"></div>
+            <div class="box" id="PG"><h4>Point Guard</h4></div>
+            <div class="box" id="SG"><h4>Shooting Guard</h4></div>
+            <div class="box" id="SF"><h4>Small Forward</h4></div>
+            <div class="box" id="PF"><h4>Power Forward</h4></div>
+            <div class="box" id="C"><h4>Center</h4></div>
         </div>
         <div class="title">
             <h2>NBA Player Search</h2>            
@@ -37,12 +37,18 @@
                         <option value="PF">PF</option>
                         <option value="C">C</option>
                     </select>
-                    <div class="show points"></div>
+                    <div class="show">
+                    <div class="points"></div>
                     <input type="range" id="points" name="points" value="0" min="0" max="20000">
-                    <div class="show FG"></div>
+                    </div>
+                    <div class="show">
+                    <div class="FG"></div>
                     <input type="range" id="FG" name="fg" value="0" min="0" max="100">
-                    <div class="show 3P"></div>
+                    </div>
+                    <div class="show">
+                    <div class="threeP"></div>
                     <input type="range" id="3P" name="threeP" value="0" min="0" max="100">
+                    </div>
                     <input class="submit" type="submit" value="search">
                 </form>
                 <table class="table">

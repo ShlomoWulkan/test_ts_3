@@ -12,6 +12,14 @@ let position = "";
 let points = 0;
 let fg = 0;
 let threeP = 0;
+const PG = document.querySelector('#PG');
+const SG = document.querySelector('#SG');
+const SF = document.querySelector('#SF');
+const PF = document.querySelector('#PF');
+const C = document.querySelector('#C');
+const pointsDiv = document.querySelector('.points');
+const fgDiv = document.querySelector('.FG');
+const threePDiv = document.querySelector('.threeP');
 const form = document.querySelector(".form");
 form.addEventListener("change", (event) => {
     const target = event.target;
@@ -21,14 +29,16 @@ form.addEventListener("change", (event) => {
             break;
         case "points":
             points = Number(target.value);
+            pointsDiv.textContent = points.toString();
             break;
         case "fg":
             fg = Number(target.value);
+            fgDiv.textContent = fg.toString();
             break;
         case "threeP":
             threeP = Number(target.value);
+            threePDiv.textContent = threeP.toString();
     }
-    console.log(`position ${position} points ${points} fg ${fg} three ${threeP}`);
 });
 const getPlayers = (position, points, fg, threeP) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -48,7 +58,8 @@ const getPlayers = (position, points, fg, threeP) => __awaiter(void 0, void 0, v
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const players = yield response.json();
-        return players;
+        const filteredPlayers = players.filter(player => { var _a; return (_a = player.season) === null || _a === void 0 ? void 0 : _a.some((season) => [2022, 2023, 2024].includes(season)); });
+        return filteredPlayers;
     }
     catch (error) {
         console.log(error);
@@ -57,17 +68,30 @@ const getPlayers = (position, points, fg, threeP) => __awaiter(void 0, void 0, v
 });
 const showPlayers = (players) => {
     const table = document.querySelector(".table");
-    table.innerHTML = "";
+    table.innerHTML = `
+        <tr class="tableHeader">
+        <th>Player</th>
+        <th>Position</th>
+        <th>Points</th>
+        <th>FG%</th>
+        <th>3P%</th>
+        <th>Action</th>
+        </tr>
+    `;
     players.forEach((player) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${player.name}</td>
+            <td>${player.playerName}</td>
             <td>${player.position}</td>
             <td>${player.points}</td>
-            <td>${player.fg}</td>
-            <td>${player.threeP}</td>
-            <td><button class="delete">Delete</button></td>
+            <td>${player.twoPercent}</td>
+            <td>${player.threePercent}</td>
+            <td class="addToTeam"><button class="addToTeamBtn">Add ${player.playerName} to current Team</button></td>
         `;
+        const addToTeamBtn = row.querySelector(".addToTeamBtn");
+        addToTeamBtn.addEventListener("click", () => {
+            addToTeam(player);
+        });
         table.appendChild(row);
     });
 };
@@ -80,3 +104,41 @@ form.addEventListener("submit", (event) => __awaiter(void 0, void 0, void 0, fun
     showPlayers(yield getPlayers(position, points, fg, threeP));
     console.log(yield getPlayers(position, points, fg, threeP));
 }));
+const addToTeam = (player) => {
+    switch (player.position) {
+        case "PG":
+            PG.innerHTML = "<h4>Point Guard</h4>";
+            insertToBox(PG, player);
+            break;
+        case "SG":
+            SG.innerHTML = "<h4>Shooting Guard</h4>";
+            insertToBox(SG, player);
+            break;
+        case "SF":
+            SF.innerHTML = "<h4>Small Forward</h4>";
+            insertToBox(SF, player);
+            break;
+        case "PF":
+            PF.innerHTML = "<h4>Power Forward</h4>";
+            insertToBox(PF, player);
+            break;
+        case "C":
+            C.innerHTML = "<h4>Center</h4>";
+            insertToBox(C, player);
+            break;
+    }
+};
+const insertToBox = (plaierBox, player) => {
+    const playerName = document.createElement("p");
+    const playerPoints = document.createElement("p");
+    const playerFG = document.createElement("p");
+    const player3P = document.createElement("p");
+    playerName.textContent = player.playerName;
+    playerPoints.textContent = `Points: ${player.points}`;
+    playerFG.textContent = `Two Precents: ${player.twoPercent}%`;
+    player3P.textContent = `Three Precents: ${player.threePercent}%`;
+    plaierBox.appendChild(playerName);
+    plaierBox.appendChild(player3P);
+    plaierBox.appendChild(playerFG);
+    plaierBox.appendChild(playerPoints);
+};
