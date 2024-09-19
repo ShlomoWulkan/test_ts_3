@@ -8,19 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+// variables to store user inputs
 let position = "";
 let points = 0;
 let fg = 0;
 let threeP = 0;
+// variables to store html elements of the players of each position
 const PG = document.querySelector('#PG');
 const SG = document.querySelector('#SG');
 const SF = document.querySelector('#SF');
 const PF = document.querySelector('#PF');
 const C = document.querySelector('#C');
+// variables to store html elements to swow the values 
 const pointsDiv = document.querySelector('.points');
 const fgDiv = document.querySelector('.FG');
 const threePDiv = document.querySelector('.threeP');
+// get the form for change listener
 const form = document.querySelector(".form");
+// add event listener to the form
 form.addEventListener("change", (event) => {
     const target = event.target;
     switch (target.name) {
@@ -40,6 +45,7 @@ form.addEventListener("change", (event) => {
             threePDiv.textContent = threeP.toString();
     }
 });
+// get players function that returns a list of players based on user inputs 
 const getPlayers = (position, points, fg, threeP) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield fetch(`https://nbaserver-q21u.onrender.com/api/filter`, {
@@ -66,6 +72,7 @@ const getPlayers = (position, points, fg, threeP) => __awaiter(void 0, void 0, v
         throw error;
     }
 });
+// show players function that shows the players in the table
 const showPlayers = (players) => {
     const table = document.querySelector(".table");
     table.innerHTML = `
@@ -95,6 +102,7 @@ const showPlayers = (players) => {
         table.appendChild(row);
     });
 };
+// event listener for the submit button to get the matches players
 form.addEventListener("submit", (event) => __awaiter(void 0, void 0, void 0, function* () {
     event.preventDefault();
     if (position === "") {
@@ -102,8 +110,8 @@ form.addEventListener("submit", (event) => __awaiter(void 0, void 0, void 0, fun
         return;
     }
     showPlayers(yield getPlayers(position, points, fg, threeP));
-    console.log(yield getPlayers(position, points, fg, threeP));
 }));
+// add to team function that adds the player to the team by clicking the add button
 const addToTeam = (player) => {
     switch (player.position) {
         case "PG":
@@ -128,6 +136,8 @@ const addToTeam = (player) => {
             break;
     }
 };
+// insert to box function that accepts a box and a player and inserts 
+//the player to a box team
 const insertToBox = (plaierBox, player) => {
     const playerName = document.createElement("p");
     const playerPoints = document.createElement("p");

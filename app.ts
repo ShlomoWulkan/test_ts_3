@@ -1,20 +1,25 @@
+// variables to store user inputs
 let position: string = "";
 let points: number = 0;
 let fg: number = 0;
 let threeP: number = 0;
 
+// variables to store html elements of the players of each position
 const PG: HTMLDivElement = document.querySelector('#PG') as HTMLDivElement;
 const SG: HTMLDivElement = document.querySelector('#SG') as HTMLDivElement;
 const SF: HTMLDivElement = document.querySelector('#SF') as HTMLDivElement;
 const PF: HTMLDivElement = document.querySelector('#PF') as HTMLDivElement;
 const C: HTMLDivElement = document.querySelector('#C') as HTMLDivElement;
 
+// variables to store html elements to swow the values 
 const pointsDiv: HTMLDivElement = document.querySelector('.points') as HTMLDivElement;
 const fgDiv: HTMLDivElement = document.querySelector('.FG') as HTMLDivElement;
 const threePDiv: HTMLDivElement = document.querySelector('.threeP') as HTMLDivElement;
 
+// get the form for change listener
 const form: HTMLFormElement = document.querySelector(".form") as HTMLFormElement;
 
+// add event listener to the form
 form.addEventListener("change", (event: Event) => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
 
@@ -36,6 +41,7 @@ form.addEventListener("change", (event: Event) => {
     }
 });
 
+// create player type
 type Player = {
     playerName: string;
     position: string;
@@ -44,6 +50,7 @@ type Player = {
     threePercent: number;
 }
 
+// get players function that returns a list of players based on user inputs 
 const getPlayers = async (position: string, points: number, fg: number, threeP: number): Promise<Player[]> => {
     try {
         const response = await fetch(`https://nbaserver-q21u.onrender.com/api/filter`, {
@@ -76,7 +83,7 @@ const getPlayers = async (position: string, points: number, fg: number, threeP: 
     }
 };
 
-
+// show players function that shows the players in the table
 const showPlayers = (players: Player[]) => {
     const table: HTMLTableElement = document.querySelector(".table") as HTMLTableElement;
     table.innerHTML = `
@@ -108,7 +115,7 @@ const showPlayers = (players: Player[]) => {
     });
 };
 
-
+// event listener for the submit button to get the matches players
 form.addEventListener("submit", async (event: Event) => {
     event.preventDefault();
     if (position === "") {
@@ -116,9 +123,9 @@ form.addEventListener("submit", async (event: Event) => {
         return;
     }
     showPlayers(await getPlayers(position, points, fg, threeP));
-    console.log(await getPlayers(position, points, fg, threeP));
 });
 
+// add to team function that adds the player to the team by clicking the add button
 const addToTeam = (player: Player) => {
 
     switch (player.position) {
@@ -145,6 +152,8 @@ const addToTeam = (player: Player) => {
     }
 };
 
+// insert to box function that accepts a box and a player and inserts 
+//the player to a box team
 const insertToBox = (plaierBox: HTMLDivElement, player: Player) => {
     const playerName = document.createElement("p");
     const playerPoints = document.createElement("p");
@@ -158,5 +167,4 @@ const insertToBox = (plaierBox: HTMLDivElement, player: Player) => {
     plaierBox.appendChild(player3P);
     plaierBox.appendChild(playerFG);
     plaierBox.appendChild(playerPoints);
-
 };
