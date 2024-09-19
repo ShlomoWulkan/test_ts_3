@@ -102,7 +102,6 @@ const showPlayers = (players) => {
         const addToTeamBtn = row.querySelector(".addToTeamBtn");
         addToTeamBtn.addEventListener("click", () => {
             addToTeam(player);
-            console.log(corentTeam);
         });
         table.appendChild(row);
     });

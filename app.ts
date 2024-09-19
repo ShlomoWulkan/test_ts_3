@@ -114,9 +114,7 @@ const showPlayers = (players: Player[]) => {
         `;
         const addToTeamBtn: HTMLButtonElement = row.querySelector(".addToTeamBtn") as HTMLButtonElement;
         addToTeamBtn.addEventListener("click", () => {
-            addToTeam(player);
-            console.log(corentTeam);
-            
+            addToTeam(player);            
         });
         table.appendChild(row);
 
